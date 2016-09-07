@@ -6,7 +6,7 @@ import (
 	"net/url"
 )
 
-func Connect(section *ini.Section) *elastic.Client {
+func Connect(section *ini.Section) *elastic.Client, error {
 
 	url := &url.URL{
 		Host:   section.Key("host").String() + ":" + section.Key("port").MustString("9200"),
@@ -16,8 +16,8 @@ func Connect(section *ini.Section) *elastic.Client {
 	// Create a client
 	client, err := elastic.NewClient(elastic.SetURL(url.String()))
 	if err != nil {
-		// Handle error
+		return _, err
 	}
 
-	return client
+	return client, _
 }
