@@ -19,6 +19,9 @@ c,cfg=                Set the configuration file
 `
 
 func main() {
+	var cfg *ini.File
+	var err error
+
 	s := options.NewOptions(SPEC)
 
 	// Check if options isn't passed
