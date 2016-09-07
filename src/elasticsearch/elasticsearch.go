@@ -21,3 +21,15 @@ func Connect(section *ini.Section) (*elastic.Client, error) {
 
 	return client, nil
 }
+
+func createIndexIfNotExists(client *elastic.Client, index string) error {
+	return nil
+}
+
+func Index(client *elastic.Client, index string) error {
+	err := createIndexIfNotExists(client, index)
+	if err != nil {
+		return err
+	}
+	return nil
+}

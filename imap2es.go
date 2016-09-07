@@ -48,5 +48,16 @@ func main() {
 	}
 
 	es, _ := cfg.GetSection("elasticsearch")
-	esclient := elasticsearch.Connect(es)
+	esclient, err := elasticsearch.Connect(es)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	err = elasticsearch.Index(esclient, es.Key("index").String())
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 }
