@@ -38,7 +38,7 @@ func main() {
 
 	// Read the configuration file
 	if opts.GetBool("cfg") {
-		cfg, err = ini.Load([]byte{}, opts.Get("backup"))
+		cfg, err = ini.Load([]byte{}, opts.Get("cfg"))
 	}
 
 	if err != nil {
