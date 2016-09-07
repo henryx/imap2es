@@ -1,7 +1,6 @@
 package imap
 
 import (
-	"fmt"
 	"github.com/go-ini/ini"
 	"github.com/mxk/go-imap/imap"
 )
@@ -51,6 +50,17 @@ func Connect(section *ini.Section) (*imap.Client, error) {
 	return client, nil
 }
 
-func List(client *imap.Client) error {
-	return nil
+func Mailboxes(client *imap.Client) chan *imap.MailboxInfo {
+	var rsp *imap.Response
+	ch := make(chan *imap.MailboxInfo)
+	cmd, _ := imap.Wait(client.List("", "%"))
+
+	go func() {
+		for _, rsp = range cmd.Data {
+			ch <- rsp.MailboxInfo()
+		}
+		close(ch)
+	}()
+
+	return ch
 }

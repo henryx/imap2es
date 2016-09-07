@@ -66,7 +66,9 @@ func main() {
 
 	imapclient.Noop()
 
-	imap.List(imapclient)
+	for info := range imap.Mailboxes(imapclient) {
+        fmt.Println(info)
+    }
 
 	err = elasticsearch.Index(esclient, escfg.Key("index").String())
 	if err != nil {
