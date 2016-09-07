@@ -23,6 +23,14 @@ func Connect(section *ini.Section) (*elastic.Client, error) {
 }
 
 func createIndexIfNotExists(client *elastic.Client, index string) error {
+	exists, err := client.IndexExists(index).Do()
+	if err != nil {
+		return err
+	}
+	if !exists {
+		// Index does not exist yet.
+	}
+
 	return nil
 }
 
