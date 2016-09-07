@@ -7,6 +7,7 @@ import (
 	"github.com/go-ini/ini"
 	"imap"
 	"os"
+	"time"
 )
 
 const VERSION = "0.0.0"
@@ -61,6 +62,7 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+	defer imapclient.Logout(30 * time.Second)
 
 	imapclient.Noop()
 
