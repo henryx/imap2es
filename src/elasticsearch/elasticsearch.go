@@ -6,6 +6,13 @@ import (
 	"net/url"
 )
 
+const mapping = `{
+    "settings":{
+        "number_of_shards":5,
+        "number_of_replicas":1
+    }
+}`
+
 func Connect(section *ini.Section) (*elastic.Client, error) {
 
 	url := &url.URL{
