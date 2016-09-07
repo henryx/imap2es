@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gaal/go-options/options"
+	"github.com/go-ini/ini"
 	"os"
 )
 
@@ -30,5 +31,15 @@ func main() {
 	if opts.GetBool("version") {
 		fmt.Println("imap2es " + VERSION)
 		os.Exit(0)
+	}
+
+	// Read the configuration file
+	if opts.GetBool("cfg") {
+		cfg, err = ini.Load([]byte{}, opts.Get("backup"))
+	}
+
+	if err != nil {
+		fmt.Println("Error about reading config file:", err)
+		os.Exit(1)
 	}
 }
