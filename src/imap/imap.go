@@ -50,3 +50,7 @@ func Connect(section *ini.Section) (*imap.Client, error) {
 
 	return client, nil
 }
+
+func List(client *imap.Client) error {
+	return nil
+}
