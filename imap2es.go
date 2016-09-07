@@ -48,5 +48,5 @@ func main() {
 	}
 
 	es, _ := cfg.GetSection("elasticsearch")
-	elasticsearch.Connect(es)
+	esclient := elasticsearch.Connect(es)
 }
