@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gaal/go-options/options"
 	"github.com/go-ini/ini"
+	"imap"
 	"os"
 )
 
@@ -54,10 +55,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = elasticsearch.Index(esclient, escfg.Key("index").String())
+	imapcfg, _ := cfg.GetSection("imap")
+	imapclient, err := imap.Connect(imapcfg)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
+	imapclient.Noop()
+
+	err = elasticsearch.Index(esclient, escfg.Key("index").String())
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
