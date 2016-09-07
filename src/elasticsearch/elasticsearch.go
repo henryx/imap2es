@@ -1,18 +1,23 @@
 package elasticsearch
 
 import (
-	"fmt"
 	"github.com/go-ini/ini"
-    "net/url"
-    //"gopkg.in/olivere/elastic.v2"
+	"gopkg.in/olivere/elastic.v2"
+	"net/url"
 )
 
-func Connect(section *ini.Section) {
-	
-    url := &url.URL{
-        Host: section.Key("host").String() +  ":" + section.Key("port").MustString("9200"),
-        Scheme: section.Key("scheme").String(),
-    }
+func Connect(section *ini.Section) *elastic.Client {
 
-    fmt.Println(url)
+	url := &url.URL{
+		Host:   section.Key("host").String() + ":" + section.Key("port").MustString("9200"),
+		Scheme: section.Key("scheme").String(),
+	}
+
+	// Create a client
+	client, err := elastic.NewClient(elastic.SetURL(url.String()))
+	if err != nil {
+		// Handle error
+	}
+
+	return client
 }
