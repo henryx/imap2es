@@ -13,6 +13,14 @@ const mapping = `{
     }
 }`
 
+type errorString struct {
+	s string
+}
+
+func (e *errorString) Error() string {
+	return e.s
+}
+
 func Connect(section *ini.Section) (*elastic.Client, error) {
 
 	url := &url.URL{
@@ -34,8 +42,16 @@ func createIndexIfNotExists(client *elastic.Client, index string) error {
 	if err != nil {
 		return err
 	}
+
 	if !exists {
-		// Index does not exist yet.
+		idx, err := client.CreateIndex(index).BodyString(mapping).Do()
+		if err != nil {
+			// Handle error
+			panic(err)
+		}
+		if !idx.Acknowledged {
+			return &errorString{"Index not acknowledged"}
+		}
 	}
 
 	return nil
