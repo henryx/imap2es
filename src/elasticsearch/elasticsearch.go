@@ -6,12 +6,23 @@ import (
 	"net/url"
 )
 
-const mapping = `{
+const mapping = `
+{
     "settings":{
         "number_of_shards":5,
         "number_of_replicas":1
+    },
+    "mappings":{
+        "messages":{
+            "properties":{
+                "message-id":{
+                    "type": "string"
+                }
+            }
+        }
     }
-}`
+}
+`
 
 type errorString struct {
 	s string
