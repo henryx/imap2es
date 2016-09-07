@@ -1,6 +1,7 @@
 package main
 
 import (
+	"elasticsearch"
 	"fmt"
 	"github.com/gaal/go-options/options"
 	"github.com/go-ini/ini"
@@ -45,4 +46,7 @@ func main() {
 		fmt.Println("Error about reading config file:", err)
 		os.Exit(1)
 	}
+
+	es, _ := cfg.GetSection("elasticsearch")
+	elasticsearch.Connect(es)
 }
