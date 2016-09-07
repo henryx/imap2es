@@ -1,9 +1,9 @@
 package imap
 
 import (
+	"fmt"
 	"github.com/go-ini/ini"
 	"github.com/mxk/go-imap/imap"
-	"time"
 )
 
 type errorString struct {
@@ -34,8 +34,6 @@ func Connect(section *ini.Section) (*imap.Client, error) {
 		return nil, err
 	}
 
-	defer client.Logout(30 * time.Second)
-
 	if client.Caps["STARTTLS"] {
 		client.StartTLS(nil)
 	}
@@ -43,8 +41,8 @@ func Connect(section *ini.Section) (*imap.Client, error) {
 	if client.State() == imap.Login {
 		user := section.Key("user").String()
 		password := section.Key("password").String()
-		_, err := client.Login(user, password)
 
+		_, err := client.Login(user, password)
 		if err != nil {
 			return nil, err
 		}
