@@ -63,8 +63,8 @@ func main() {
 		os.Exit(1)
 	}
 	defer imapclient.Logout(30 * time.Second)
-
-	for mailbox := range imap.Mailboxes(imapclient, "") {
+	folders := imap.RetrieveFolders(imapclient, "")
+	for _, mailbox := range folders {
 		fmt.Println(mailbox)
 	}
 

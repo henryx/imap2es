@@ -50,7 +50,7 @@ func Connect(section *ini.Section) (*imap.Client, error) {
 	return client, nil
 }
 
-func Mailboxes(client *imap.Client, mailbox string) chan *imap.MailboxInfo {
+func listFolders(client *imap.Client, mailbox string) chan *imap.MailboxInfo {
 	var rsp *imap.Response
 	var search string
 
@@ -75,4 +75,20 @@ func Mailboxes(client *imap.Client, mailbox string) chan *imap.MailboxInfo {
 	}()
 
 	return ch
+}
+
+func RetrieveFolders(client *imap.Client, folder string) []string {
+	var folders []string
+
+	for mailbox := range listFolders(client, folder) {
+		folders = append(folders, mailbox.Name)
+
+		if mailbox.Attrs["\\Haschildren"] == true {
+			subfolders := RetrieveFolders(client, mailbox.Name)
+			for _, subfolder := range subfolders {
+				folders = append(folders, subfolder)
+			}
+		}
+	}
+	return folders
 }
