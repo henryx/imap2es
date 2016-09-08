@@ -93,7 +93,7 @@ func RetrieveFolders(client *imap.Client, folder string) []string {
 	return folders
 }
 
-func MessageCount(client *imap.Client, folder string) int {
+func MessageCount(client *imap.Client, folder string) uint32 {
 	client.Select(folder, true)
 
 	return client.Mailbox.Messages
