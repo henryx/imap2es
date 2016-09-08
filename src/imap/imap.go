@@ -13,6 +13,33 @@ func (e *errorString) Error() string {
 	return e.s
 }
 
+func listFolders(client *imap.Client, mailbox string) chan *imap.MailboxInfo {
+	var rsp *imap.Response
+	var search string
+
+	ch := make(chan *imap.MailboxInfo)
+
+	cmd, _ := imap.Wait(client.List("", "INBOX"))
+	delim := cmd.Data[0].MailboxInfo().Delim
+
+	if mailbox != "INBOX" && mailbox != "" {
+		search = mailbox + delim + "%"
+	} else {
+		search = "%"
+	}
+
+	cmd, _ = imap.Wait(client.List("", search))
+
+	go func() {
+		for _, rsp = range cmd.Data {
+			ch <- rsp.MailboxInfo()
+		}
+		close(ch)
+	}()
+
+	return ch
+}
+
 func Connect(section *ini.Section) (*imap.Client, error) {
 	var client *imap.Client
 	var err error
@@ -48,33 +75,6 @@ func Connect(section *ini.Section) (*imap.Client, error) {
 	}
 
 	return client, nil
-}
-
-func listFolders(client *imap.Client, mailbox string) chan *imap.MailboxInfo {
-	var rsp *imap.Response
-	var search string
-
-	ch := make(chan *imap.MailboxInfo)
-
-	cmd, _ := imap.Wait(client.List("", "INBOX"))
-	delim := cmd.Data[0].MailboxInfo().Delim
-
-	if mailbox != "INBOX" && mailbox != "" {
-		search = mailbox + delim + "%"
-	} else {
-		search = "%"
-	}
-
-	cmd, _ = imap.Wait(client.List("", search))
-
-	go func() {
-		for _, rsp = range cmd.Data {
-			ch <- rsp.MailboxInfo()
-		}
-		close(ch)
-	}()
-
-	return ch
 }
 
 func RetrieveFolders(client *imap.Client, folder string) []string {
