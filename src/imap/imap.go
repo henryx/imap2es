@@ -63,3 +63,14 @@ func RetrieveFolders(c *client.Client, folder string) []string {
 
 	return folders
 }
+
+func CountMessages(c *client.Client, folder string) (uint32, error) {
+	mbox, err := c.Select(folder, true)
+	if err != nil {
+		return 0, err
+	}
+
+	count := mbox.Messages
+
+	return count, nil
+}

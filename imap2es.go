@@ -65,7 +65,12 @@ func main() {
 
 	folders := imap.RetrieveFolders(imapclient, "*")
 	for _, mailbox := range folders {
-		fmt.Println(mailbox)
+		count, err := imap.CountMessages(imapclient, mailbox)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		fmt.Println(mailbox+ ":", count)
 	}
 
 	err = elasticsearch.Index(esclient, escfg.Key("index").String())
