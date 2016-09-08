@@ -64,8 +64,8 @@ func main() {
 	}
 	defer imapclient.Logout(30 * time.Second)
 
-	for info := range imap.Mailboxes(imapclient) {
-		fmt.Println(info)
+	for mailbox := range imap.Mailboxes(imapclient, "") {
+		fmt.Println(mailbox)
 	}
 
 	err = elasticsearch.Index(esclient, escfg.Key("index").String())
