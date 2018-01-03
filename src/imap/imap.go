@@ -64,6 +64,29 @@ func RetrieveFolders(c *client.Client, folder string) []string {
 	return folders
 }
 
+func RetrieveMessages(c *client.Client, folder string, start, end uint32) ([]*imap.Message, error) {
+	var emails []*imap.Message
+	_, err := c.Select(folder, true)
+	if err != nil {
+		return nil, err
+	}
+
+	seqset, _ := imap.NewSeqSet("")
+	seqset.AddRange(start, end)
+
+	messages := make(chan *imap.Message, (end - start + 1))
+	err = c.Fetch(seqset, []string{"ENVELOPE"}, messages)
+	if err != nil {
+		return nil, err
+	}
+
+	for msg := range messages {
+		emails = append(emails, msg)
+	}
+
+	return emails, nil
+}
+
 func CountMessages(c *client.Client, folder string) (uint32, error) {
 	mbox, err := c.Select(folder, true)
 	if err != nil {
