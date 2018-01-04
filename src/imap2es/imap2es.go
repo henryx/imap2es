@@ -82,12 +82,12 @@ func main() {
 		messages, err := imap.RetrieveMessages(imapclient, mailbox, 1, count)
 		for _, message := range messages {
 			fmt.Println("|--", message.Envelope.Subject)
-		}
-	}
 
-	err = elasticsearch.Index(esclient, escfg.Key("index").String())
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+			err = elasticsearch.Index(esclient, escfg.Key("index").String())
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+		}
 	}
 }
