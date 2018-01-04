@@ -8,11 +8,11 @@
 package main
 
 import (
-	"elasticsearch"
+	"imap2es/elasticsearch"
 	"fmt"
 	"github.com/gaal/go-options/options"
 	"github.com/go-ini/ini"
-	"imap"
+	"imap2es/imap"
 	"os"
 )
 
