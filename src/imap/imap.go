@@ -1,3 +1,10 @@
+/*
+   Copyright (C) 2018 Enrico Bianchi (enrico.bianchi@gmail.com)
+   Project       imap2es
+   Description   An IMAP to Elasticsearch indexer
+   License       GPL version 2 (see LICENSE for details)
+*/
+
 package imap
 
 import (
