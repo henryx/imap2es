@@ -9,6 +9,7 @@ package elasticsearch
 
 import (
 	"context"
+	"github.com/emersion/go-imap"
 	"github.com/go-ini/ini"
 	"gopkg.in/olivere/elastic.v6"
 	"net/url"
@@ -76,7 +77,7 @@ func createIndexIfNotExists(client *elastic.Client, index string) error {
 	return nil
 }
 
-func Index(client *elastic.Client, index string) error {
+func Index(client *elastic.Client, index string, message *imap.Message) error {
 	err := createIndexIfNotExists(client, index)
 	if err != nil {
 		return err
