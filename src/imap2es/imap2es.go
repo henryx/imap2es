@@ -83,7 +83,7 @@ func main() {
 		for _, message := range messages {
 			fmt.Println("|--", message.Envelope.Subject)
 
-			err = elasticsearch.Index(esclient, escfg.Key("index").String())
+			err = elasticsearch.Index(esclient, escfg.Key("index").String(), message)
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)
