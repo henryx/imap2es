@@ -1,8 +1,9 @@
 package elasticsearch
 
 import (
+	"context"
 	"github.com/go-ini/ini"
-	"gopkg.in/olivere/elastic.v2"
+	"gopkg.in/olivere/elastic.v6"
 	"net/url"
 )
 
@@ -49,13 +50,13 @@ func Connect(section *ini.Section) (*elastic.Client, error) {
 }
 
 func createIndexIfNotExists(client *elastic.Client, index string) error {
-	exists, err := client.IndexExists(index).Do()
+	exists, err := client.IndexExists(index).Do(context.Background())
 	if err != nil {
 		return err
 	}
 
 	if !exists {
-		idx, err := client.CreateIndex(index).BodyString(mapping).Do()
+		idx, err := client.CreateIndex(index).BodyString(mapping).Do(context.Background())
 		if err != nil {
 			// Handle error
 			panic(err)
