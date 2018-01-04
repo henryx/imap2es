@@ -34,8 +34,11 @@ func Connect(section *ini.Section) (*client.Client, error) {
 		return nil, err
 	}
 
-	if c.Caps["STARTTLS"] {
+	caps, err := c.Capability()
+	if caps["STARTTLS"] {
 		c.StartTLS(nil)
+	} else if err != nil {
+		return nil, err
 	}
 
 	user := section.Key("user").String()
@@ -71,11 +74,11 @@ func RetrieveMessages(c *client.Client, folder string, start, end uint32) ([]*im
 		return nil, err
 	}
 
-	seqset, _ := imap.NewSeqSet("")
+	seqset := new(imap.SeqSet)
 	seqset.AddRange(start, end)
 
 	messages := make(chan *imap.Message, (end - start + 1))
-	err = c.Fetch(seqset, []string{"ENVELOPE"}, messages)
+	err = c.Fetch(seqset, []imap.FetchItem{imap.FetchEnvelope}, messages)
 	if err != nil {
 		return nil, err
 	}
