@@ -56,13 +56,8 @@ func main() {
 	}
 
 	escfg, _ := cfg.GetSection("elasticsearch")
-	esclient, err := elasticsearch.Connect(escfg)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
 	imapcfg, _ := cfg.GetSection("imap")
+
 	imapclient, err := imap.Connect(imapcfg)
 	if err != nil {
 		fmt.Println(err)
@@ -86,6 +81,12 @@ func main() {
 		}
 		for _, message := range messages {
 			fmt.Println("|--", message.Subject)
+
+			esclient, err := elasticsearch.Connect(escfg)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
 
 			err = elasticsearch.Index(esclient, escfg.Key("index").String(), message)
 			if err != nil {
