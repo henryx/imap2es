@@ -7,12 +7,16 @@
 
 package utils
 
-import "github.com/emersion/go-imap"
+import (
+	"github.com/emersion/go-message/mail"
+	"time"
+)
 
 type Message struct {
-	From      []*imap.Address
-	To        []*imap.Address
+	From      []*mail.Address
+	To        []*mail.Address
 	Subject   string
+	Date      time.Time
 	Body      string
 	MessageId string
 }
