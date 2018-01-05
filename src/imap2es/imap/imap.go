@@ -147,7 +147,8 @@ func RetrieveMessages(c *client.Client, folder string, start, end uint32) ([]uti
 	}
 
 	for msg := range messages {
-		emails = append(emails, parseMessage(msg))
+		message := parseMessage(msg)
+		emails = append(emails, message)
 	}
 
 	return emails, nil
