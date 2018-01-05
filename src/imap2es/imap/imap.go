@@ -50,6 +50,10 @@ func parseMessage(msg *imap.Message) utils.Message {
 		retval.To = to
 	}
 
+	if cc, err := header.AddressList("Cc"); err == nil {
+		retval.CC = cc
+	}
+
 	if subject, err := header.Subject(); err == nil {
 		retval.Subject = subject
 	}
@@ -148,6 +152,7 @@ func RetrieveMessages(c *client.Client, folder string, start, end uint32) ([]uti
 
 	for msg := range messages {
 		message := parseMessage(msg)
+		message.Folder = folder
 		emails = append(emails, message)
 	}
 
