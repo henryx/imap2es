@@ -58,13 +58,13 @@ func (e *errorString) Error() string {
 
 func Connect(section *ini.Section) (*elastic.Client, error) {
 
-	url := &url.URL{
+	uri := &url.URL{
 		Host:   section.Key("host").String() + ":" + section.Key("port").MustString("9200"),
 		Scheme: section.Key("scheme").String(),
 	}
 
 	// Create a client
-	client, err := elastic.NewClient(elastic.SetURL(url.String()))
+	client, err := elastic.NewClient(elastic.SetURL(uri.String()))
 	if err != nil {
 		return nil, err
 	}
