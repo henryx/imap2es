@@ -10,7 +10,12 @@ package imap
 import (
 	"github.com/emersion/go-imap"
 	"github.com/emersion/go-imap/client"
+	"github.com/emersion/go-message/mail"
 	"github.com/go-ini/ini"
+	"imap2es/utils"
+	"io"
+	"io/ioutil"
+	"log"
 )
 
 type errorString struct {
@@ -19,6 +24,52 @@ type errorString struct {
 
 func (e *errorString) Error() string {
 	return e.s
+}
+
+func parseMessage(msg *imap.Message) utils.Message {
+	retval := utils.Message{}
+
+	section, _ := imap.ParseBodySectionName("BODY[]")
+	raw := msg.GetBody(section)
+
+	reader, err := mail.CreateReader(raw)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	header := reader.Header
+	if date, err := header.Date(); err == nil {
+		retval.Date = date
+	}
+
+	if from, err := header.AddressList("From"); err == nil {
+		retval.From = from
+	}
+
+	if to, err := header.AddressList("To"); err == nil {
+		retval.To = to
+	}
+
+	if subject, err := header.Subject(); err == nil {
+		retval.Subject = subject
+	}
+
+	body := ""
+	for {
+		part, err := reader.NextPart()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			log.Fatal(err)
+		}
+
+		bodypart, _ := ioutil.ReadAll(part.Body)
+		body += string(bodypart)
+	}
+
+	retval.Body = body
+
+	return retval
 }
 
 func Connect(section *ini.Section) (*client.Client, error) {
@@ -74,8 +125,8 @@ func RetrieveFolders(c *client.Client, folder string) []string {
 	return folders
 }
 
-func RetrieveMessages(c *client.Client, folder string, start, end uint32) ([]*imap.Message, error) {
-	var emails []*imap.Message
+func RetrieveMessages(c *client.Client, folder string, start, end uint32) ([]utils.Message, error) {
+	var emails []utils.Message
 	_, err := c.Select(folder, true)
 	if err != nil {
 		return nil, err
@@ -91,7 +142,7 @@ func RetrieveMessages(c *client.Client, folder string, start, end uint32) ([]*im
 	}
 
 	for msg := range messages {
-		emails = append(emails, msg)
+		emails = append(emails, parseMessage(msg))
 	}
 
 	return emails, nil
