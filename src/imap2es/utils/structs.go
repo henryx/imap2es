@@ -13,8 +13,10 @@ import (
 )
 
 type Message struct {
+	Folder    string
 	From      []*mail.Address
 	To        []*mail.Address
+	CC        []*mail.Address
 	Subject   string
 	Date      time.Time
 	Body      string
