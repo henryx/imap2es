@@ -56,6 +56,14 @@ func (e *errorString) Error() string {
 	return e.s
 }
 
+type Message struct {
+	From      []*imap.Address
+	To        []*imap.Address
+	Subject   string
+	Body      string
+	MessageId string
+}
+
 func Connect(section *ini.Section) (*elastic.Client, error) {
 
 	url := &url.URL{
