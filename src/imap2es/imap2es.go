@@ -8,10 +8,10 @@
 package main
 
 import (
-	"imap2es/elasticsearch"
 	"fmt"
 	"github.com/gaal/go-options/options"
 	"github.com/go-ini/ini"
+	"imap2es/elasticsearch"
 	"imap2es/imap"
 	"os"
 )
@@ -77,7 +77,7 @@ func main() {
 			fmt.Println(err)
 			break
 		}
-		fmt.Println(mailbox+ ":", count)
+		fmt.Println(mailbox+":", count)
 
 		messages, err := imap.RetrieveMessages(imapclient, mailbox, 1, count)
 		if err != nil {
@@ -85,7 +85,7 @@ func main() {
 			os.Exit(1)
 		}
 		for _, message := range messages {
-			fmt.Println("|--", message.Envelope.Subject)
+			fmt.Println("|--", message.Subject)
 
 			err = elasticsearch.Index(esclient, escfg.Key("index").String(), message)
 			if err != nil {
