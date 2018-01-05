@@ -128,6 +128,11 @@ func RetrieveFolders(c *client.Client, folder string) []string {
 func RetrieveMessages(c *client.Client, folder string, start, end uint32) ([]utils.Message, error) {
 	var emails []utils.Message
 	_, err := c.Select(folder, true)
+
+	if start > end {
+		return emails, nil
+	}
+
 	if err != nil {
 		return nil, err
 	}
