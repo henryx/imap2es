@@ -15,7 +15,6 @@ import (
 	"imap2es/utils"
 	"io"
 	"io/ioutil"
-	"log"
 )
 
 type errorString struct {
@@ -26,7 +25,7 @@ func (e *errorString) Error() string {
 	return e.s
 }
 
-func parseMessage(msg *imap.Message) utils.Message {
+func parseMessage(msg *imap.Message) (utils.Message, error) {
 	retval := utils.Message{}
 
 	section, _ := imap.ParseBodySectionName("BODY[]")
@@ -34,7 +33,7 @@ func parseMessage(msg *imap.Message) utils.Message {
 
 	reader, err := mail.CreateReader(raw)
 	if err != nil {
-		log.Fatal(err)
+		return utils.Message{}, err
 	}
 
 	header := reader.Header
@@ -64,7 +63,7 @@ func parseMessage(msg *imap.Message) utils.Message {
 		if err == io.EOF {
 			break
 		} else if err != nil {
-			log.Fatal(err)
+			return utils.Message{}, err
 		}
 
 		bodypart, _ := ioutil.ReadAll(part.Body)
@@ -73,7 +72,7 @@ func parseMessage(msg *imap.Message) utils.Message {
 
 	retval.Body = body
 
-	return retval
+	return retval, nil
 }
 
 func Connect(section *ini.Section) (*client.Client, error) {
@@ -151,7 +150,11 @@ func RetrieveMessages(c *client.Client, folder string, start, end uint32) ([]uti
 	}
 
 	for msg := range messages {
-		message := parseMessage(msg)
+		message, err := parseMessage(msg)
+		if err != nil {
+			return nil, err
+		}
+
 		message.Folder = folder
 		emails = append(emails, message)
 	}
