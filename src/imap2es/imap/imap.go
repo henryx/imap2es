@@ -85,7 +85,7 @@ func RetrieveMessages(c *client.Client, folder string, start, end uint32) ([]*im
 	seqset.AddRange(start, end)
 
 	messages := make(chan *imap.Message, (end - start + 1))
-	err = c.Fetch(seqset, []imap.FetchItem{imap.FetchEnvelope}, messages)
+	err = c.Fetch(seqset, []imap.FetchItem{"BODY[]"}, messages)
 	if err != nil {
 		return nil, err
 	}
