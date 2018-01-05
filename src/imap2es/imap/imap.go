@@ -10,6 +10,7 @@ package imap
 import (
 	"github.com/emersion/go-imap"
 	"github.com/emersion/go-imap/client"
+	"github.com/emersion/go-message"
 	"github.com/emersion/go-message/mail"
 	"github.com/go-ini/ini"
 	"imap2es/utils"
@@ -32,7 +33,7 @@ func parseMessage(msg *imap.Message) (utils.Message, error) {
 	raw := msg.GetBody(section)
 
 	reader, err := mail.CreateReader(raw)
-	if err != nil {
+	if err != nil && !message.IsUnknownEncoding(err) {
 		return utils.Message{}, err
 	}
 
