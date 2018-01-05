@@ -17,15 +17,30 @@ import (
 
 const mapping = `
 {
-    "settings":{
-        "number_of_shards":5,
-        "number_of_replicas":1
+    "settings": {
+        "index": {
+            "number_of_shards": 5,
+            "number_of_replicas": 1
+        }
     },
-    "mappings":{
-        "messages":{
-            "properties":{
-                "message-id":{
-                    "type": "string"
+    "mappings": {
+        "messages": {
+            "properties": {
+                "from": {
+                    "type": "keyword"
+                },
+                "to": {
+                    "type": "keyword"
+                },
+                "message-id": {
+                    "type": "text"
+                },
+                "folder": {
+                    "type": "text"
+                },
+                "date": {
+                    "type": "date",
+                    "format": "EEE, d MMM yyyy HH:mm:ss Z"
                 }
             }
         }
