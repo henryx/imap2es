@@ -12,6 +12,7 @@ import (
 	"github.com/emersion/go-imap"
 	"github.com/go-ini/ini"
 	"gopkg.in/olivere/elastic.v6"
+	"imap2es/utils"
 	"net/url"
 )
 
@@ -56,14 +57,6 @@ func (e *errorString) Error() string {
 	return e.s
 }
 
-type Message struct {
-	From      []*imap.Address
-	To        []*imap.Address
-	Subject   string
-	Body      string
-	MessageId string
-}
-
 func Connect(section *ini.Section) (*elastic.Client, error) {
 
 	url := &url.URL{
@@ -106,7 +99,7 @@ func Index(client *elastic.Client, index string, message *imap.Message) error {
 		return err
 	}
 
-	msg := Message{
+	msg := utils.Message{
 		From:      message.Envelope.From,
 		To:        message.Envelope.To,
 		Subject:   message.Envelope.Subject,
