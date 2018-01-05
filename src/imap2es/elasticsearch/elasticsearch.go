@@ -105,5 +105,15 @@ func Index(client *elastic.Client, index string, message *imap.Message) error {
 	if err != nil {
 		return err
 	}
+
+	msg := Message{
+		From:      message.Envelope.From,
+		To:        message.Envelope.To,
+		Subject:   message.Envelope.Subject,
+		MessageId: message.Envelope.MessageId,
+	}
+
+	client.Index().Index(index).BodyJson(msg)
+
 	return nil
 }
