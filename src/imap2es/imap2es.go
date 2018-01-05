@@ -72,7 +72,7 @@ func main() {
 			fmt.Println(err)
 			break
 		}
-		fmt.Println(mailbox+":", count)
+		fmt.Printf("Mailbox %s: %s\n", mailbox, count)
 
 		messages, err := imap.RetrieveMessages(imapclient, mailbox, 1, count)
 		if err != nil {
@@ -80,17 +80,17 @@ func main() {
 			os.Exit(1)
 		}
 		for _, message := range messages {
-			fmt.Println("|--", message.Subject)
+			//fmt.Println("|--", message.Subject)
 
 			esclient, err := elasticsearch.Connect(escfg)
 			if err != nil {
-				fmt.Println(err)
+				fmt.Println("|--", err)
 				os.Exit(1)
 			}
 
 			err = elasticsearch.Index(esclient, escfg.Key("index").String(), message)
 			if err != nil {
-				fmt.Println(err)
+				fmt.Println("|--", err)
 				os.Exit(1)
 			}
 		}
