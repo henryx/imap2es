@@ -93,12 +93,18 @@ func createIndexIfNotExists(client *elastic.Client, index string) error {
 }
 
 func Index(client *elastic.Client, index string, message utils.Message) error {
-	err := createIndexIfNotExists(client, index)
+	var err error
+
+	err = createIndexIfNotExists(client, index)
 	if err != nil {
 		return err
 	}
 
-	client.Index().Index(index).BodyJson(message).Do(context.Background())
+	_, err = client.Index().Index(index).Type("messages").BodyJson(message).Do(context.Background())
 
-	return nil
+	if err != nil {
+		return err
+	} else {
+		return nil
+	}
 }
