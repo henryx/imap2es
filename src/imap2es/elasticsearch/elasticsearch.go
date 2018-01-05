@@ -17,34 +17,123 @@ import (
 
 const mapping = `
 {
-    "settings": {
-        "index": {
-            "number_of_shards": 5,
-            "number_of_replicas": 1
-        }
-    },
-    "mappings": {
-        "messages": {
-            "properties": {
-                "from": {
-                    "type": "keyword"
-                },
-                "to": {
-                    "type": "keyword"
-                },
-                "messageid": {
-                    "type": "text"
-                },
-                "folder": {
-                    "type": "text"
-                },
-                "date": {
-                    "type": "date",
-                    "format": "EEE, d MMM yyyy HH:mm:ss Z"
-                }
+   "settings":{
+      "index":{
+         "number_of_shards":5,
+         "number_of_replicas":1
+      }
+   },
+   "mappings":{
+      "messages":{
+         "properties":{
+            "From":{
+               "properties":{
+                  "Address":{
+                     "type":"text",
+                     "fields":{
+                        "keyword":{
+                           "ignore_above":256,
+                           "type":"keyword"
+                        }
+                     }
+                  },
+                  "Name":{
+                     "type":"text",
+                     "fields":{
+                        "keyword":{
+                           "ignore_above":256,
+                           "type":"keyword"
+                        }
+                     }
+                  }
+               }
+            },
+            "To":{
+               "properties":{
+                  "Address":{
+                     "type":"text",
+                     "fields":{
+                        "keyword":{
+                           "ignore_above":256,
+                           "type":"keyword"
+                        }
+                     }
+                  },
+                  "Name":{
+                     "type":"text",
+                     "fields":{
+                        "keyword":{
+                           "ignore_above":256,
+                           "type":"keyword"
+                        }
+                     }
+                  }
+               }
+            },
+            "CC":{
+               "properties":{
+                  "Address":{
+                     "type":"text",
+                     "fields":{
+                        "keyword":{
+                           "ignore_above":256,
+                           "type":"keyword"
+                        }
+                     }
+                  },
+                  "Name":{
+                     "type":"text",
+                     "fields":{
+                        "keyword":{
+                           "ignore_above":256,
+                           "type":"keyword"
+                        }
+                     }
+                  }
+               }
+            },
+            "Folder":{
+               "type":"text",
+               "fields":{
+                  "keyword":{
+                     "ignore_above":256,
+                     "type":"keyword"
+                  }
+               }
+            },
+            "Body":{
+               "type":"text",
+               "fields":{
+                  "keyword":{
+                     "ignore_above":256,
+                     "type":"keyword"
+                  }
+               }
+            },
+            "Date":{
+               "type":"date"
+            },
+            "Subject":{
+               "type":"text",
+               "fields":{
+                  "keyword":{
+                     "ignore_above":256,
+                     "type":"keyword"
+                  }
+               }
+            },
+            "MessageId":{
+               "type":"text",
+               "fields":{
+                  "keyword":{
+                     "ignore_above":256,
+                     "type":"keyword"
+                  }
+               }
             }
-        }
-    }
+         }
+      }
+   }
 }
 `
 
