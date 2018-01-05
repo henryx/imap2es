@@ -9,7 +9,6 @@ package elasticsearch
 
 import (
 	"context"
-	"github.com/emersion/go-imap"
 	"github.com/go-ini/ini"
 	"gopkg.in/olivere/elastic.v6"
 	"imap2es/utils"
@@ -93,20 +92,13 @@ func createIndexIfNotExists(client *elastic.Client, index string) error {
 	return nil
 }
 
-func Index(client *elastic.Client, index string, message *imap.Message) error {
+func Index(client *elastic.Client, index string, message utils.Message) error {
 	err := createIndexIfNotExists(client, index)
 	if err != nil {
 		return err
 	}
 
-	msg := utils.Message{
-		From:      message.Envelope.From,
-		To:        message.Envelope.To,
-		Subject:   message.Envelope.Subject,
-		MessageId: message.Envelope.MessageId,
-	}
-
-	client.Index().Index(index).BodyJson(msg)
+	client.Index().Index(index).BodyJson(message).Do(context.Background())
 
 	return nil
 }
