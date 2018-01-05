@@ -8,6 +8,7 @@
 package imap
 
 import (
+	"fmt"
 	"github.com/emersion/go-imap"
 	"github.com/emersion/go-imap/client"
 	"github.com/emersion/go-message"
@@ -145,7 +146,7 @@ func RetrieveMessages(c *client.Client, folder string, start, end uint32) ([]uti
 	seqset.AddRange(start, end)
 
 	messages := make(chan *imap.Message, (end - start + 1))
-	err = c.Fetch(seqset, []imap.FetchItem{"BODY[]"}, messages)
+	err = c.Fetch(seqset, []imap.FetchItem{"BODY[]", imap.FetchEnvelope}, messages)
 	if err != nil {
 		return nil, err
 	}
@@ -153,7 +154,8 @@ func RetrieveMessages(c *client.Client, folder string, start, end uint32) ([]uti
 	for msg := range messages {
 		message, err := parseMessage(msg)
 		if err != nil {
-			return nil, err
+			fmt.Printf("|-- Error parsing message-id %s: %s\n", msg.Envelope.MessageId, err)
+			continue
 		}
 
 		message.Folder = folder
