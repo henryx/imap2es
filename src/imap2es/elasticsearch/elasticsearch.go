@@ -32,7 +32,7 @@ const mapping = `
                 "to": {
                     "type": "keyword"
                 },
-                "message-id": {
+                "messageid": {
                     "type": "text"
                 },
                 "folder": {
