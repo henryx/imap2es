@@ -65,7 +65,7 @@ func main() {
 	}
 	defer imapclient.Logout()
 
-	folders := imap.RetrieveFolders(imapclient, "*")
+	folders := imap.RetrieveFolders(imapclient, imapcfg.Key("folder").MustString("*"))
 	for _, mailbox := range folders {
 		count, err := imap.CountMessages(imapclient, mailbox)
 		if err != nil {
