@@ -72,7 +72,7 @@ func main() {
 			fmt.Println(err)
 			break
 		}
-		fmt.Printf("Mailbox %s: %s\n", mailbox, count)
+		fmt.Printf("Mailbox %v: %v\n", mailbox, count)
 
 		messages, err := imap.RetrieveMessages(imapclient, mailbox, 1, count)
 		if err != nil {
