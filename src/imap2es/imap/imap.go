@@ -154,14 +154,14 @@ func RetrieveMessages(c *client.Client, folder string, start, end uint32) ([]uti
 	}
 
 	for msg := range messages {
-		message, err := parseMessage(msg)
+		msgParsed, err := parseMessage(msg)
 		if err != nil {
 			fmt.Printf("|-- Error parsing message-id %s: %s\n", msg.Envelope.MessageId, err)
 			continue
 		}
 
-		message.Folder = folder
-		emails = append(emails, message)
+		msgParsed.Folder = folder
+		emails = append(emails, msgParsed)
 	}
 
 	return emails, nil
