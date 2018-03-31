@@ -83,13 +83,15 @@ func Connect(section *ini.Section) (*client.Client, error) {
 
 	host := section.Key("host").String()
 	scheme := section.Key("scheme").String()
-	if scheme == "imap" {
+
+	switch scheme {
+	case "imap":
 		port := section.Key("port").MustString("143")
 		c, err = client.Dial(host + ":" + port)
-	} else if scheme == "imaps" {
+	case "imaps":
 		port := section.Key("port").MustString("993")
 		c, err = client.DialTLS(host+":"+port, nil)
-	} else {
+	default:
 		err = &errorString{"Scheme not supported: " + scheme}
 	}
 
