@@ -27,6 +27,16 @@ v,version             Print version
 c,cfg=                Set the configuration file
 `
 
+func contains(list []string, item string) bool {
+	for _, element := range list {
+		if element == item {
+			return true
+		}
+	}
+
+	return false
+}
+
 func main() {
 	var cfg *ini.File
 	var err error
@@ -67,6 +77,10 @@ func main() {
 
 	folders := imap.RetrieveFolders(imapclient, imapcfg.Key("folder").MustString("*"))
 	for _, mailbox := range folders {
+		if contains(mailbox.Attributes, "\\Noselect") {
+			continue
+		}
+
 		count, err := imap.CountMessages(imapclient, mailbox.Name)
 		if err != nil {
 			fmt.Println(err)
