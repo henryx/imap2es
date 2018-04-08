@@ -117,8 +117,8 @@ func Connect(section *ini.Section) (*client.Client, error) {
 	return c, nil
 }
 
-func RetrieveFolders(c *client.Client, folder string) []string {
-	var folders []string
+func RetrieveFolders(c *client.Client, folder string) []*imap.MailboxInfo {
+	var folders []*imap.MailboxInfo
 	mailboxes := make(chan *imap.MailboxInfo)
 
 	go func() {
@@ -126,7 +126,7 @@ func RetrieveFolders(c *client.Client, folder string) []string {
 	}()
 
 	for mailbox := range mailboxes {
-		folders = append(folders, mailbox.Name)
+		folders = append(folders, mailbox)
 	}
 
 	return folders
