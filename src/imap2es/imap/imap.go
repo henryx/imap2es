@@ -30,6 +30,8 @@ func (e *errorString) Error() string {
 func parseMessage(msg *imap.Message) (utils.Message, error) {
 	retval := utils.Message{}
 
+	retval.MessageId = msg.Envelope.MessageId
+
 	section, _ := imap.ParseBodySectionName("BODY[]")
 	raw := msg.GetBody(section)
 
